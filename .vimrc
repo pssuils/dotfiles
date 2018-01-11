@@ -1,12 +1,15 @@
 set nocompatible               " be iMproved
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+"set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 
-" let Vundle manage Vundle
-" required! 
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+" " required! 
 Bundle 'gmarik/vundle'
 "Nicer view of the fs
 Bundle 'scrooloose/nerdtree'
@@ -28,8 +31,6 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'majutsushi/tagbar'
 "fuzzy file finder
 Bundle 'kien/ctrlp.vim.git'
-"cake php
-Bundle 'ndreynolds/vim-cakephp'
 
 filetype plugin indent on     " required!
 "let g:tagbar_ctags_bin = 'ctags --options=/home/javi/.vim/bundle/MatlabFilesEdition/.ctags'
@@ -63,11 +64,6 @@ let mapleader = ","
 noremap \ ,
 
 
-"remaps cake
-noremap <leader>pc : Ccontroller<CR>
-noremap <leader>pm : CModel<CR>
-noremap <leader>pv : CView 
-
 "gundo
 noremap <Leader>u : GundoToggle<CR>
 "Tagbar
@@ -79,3 +75,5 @@ nnoremap <leader><leader> :<c-u>exe "b ".v:count<cr>
 
 let g:tagbar_autofocus=1
 let g:tagbar_autoclose=1
+
+set tabstop=4
