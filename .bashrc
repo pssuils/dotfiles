@@ -1,9 +1,9 @@
 #  ---------------------------------------------------------------------------
 #
-#  Description:  This file holds all my BASH configurations and aliases
+#  Description:  This file holds all my BASH configurations 
 #
 #  Sections:
-#  1.   Environment Configuration
+#  1.   Import other files
 #  2.   Make Terminal Better (remapping defaults and adding functionality)
 #  3.   File and Folder Management
 #  4.   Searching
@@ -17,34 +17,26 @@
 #  ---------------------------------------------------------------------------
 
 #   -------------------------------
-#   1.  ENVIRONMENT CONFIGURATION
+#   1.  IMPORT OTHER FILES
 #   -------------------------------
-
-#   Set Paths
-#   ------------------------------------------------------------
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-##export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/"
-#   Set Default Editor 
-#   ------------------------------------------------------------
-export EDITOR=/usr/bin/vim
-
-#   Set default blocksize for ls, df, du
-#   from this: http://hints.macworld.com/comment.php?mode=view&cid=24491
-#   ------------------------------------------------------------
-export BLOCKSIZE=1k
-
-#   Add color to terminal
-#   (this is all commented out as I use Mac Terminal Profiles)
-#   from http://osxdaily.com/2012/02/21/add-color-to-the-terminal-in-mac-os-x/
-#   ------------------------------------------------------------
-export CLICOLOR=1;
-export LSCOLORS=exfxcxdxbxegedabagacad;
+## PROMPT LOOKS
+if [ -f ~/.bash_prompt ]; then
+    source ~/.bash_prompt
+fi
+## EXPORTS
+if [ -f ~/.exports ]; then
+    source ~/.exports
+fi
+## ALIASES/COMMANDS
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
 
 #   -----------------------------
 #   2.  MAKE TERMINAL BETTER
 #   -----------------------------
 
-#cd() { builtin cd "$@"; ll; }               # Always list directory contents upon 'cd'
+#cd() { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }        # mcd:          Makes new Dir and jumps inside
 trash () { command mv "$@" ~/.Trash ; }     # trash:        Moves a file to the MacOS trash
 ql () { qlmanage -p "$*" >& /dev/null; }    # ql:           Opens any file in MacOS Quicklook Preview
@@ -58,7 +50,7 @@ mans () {
 
 #   showa: to remind yourself of an alias (given some part of it)
 #   ------------------------------------------------------------
-showa () { /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.bash | grep -v '^\s*$' | less -FSRXc ; }
+#showa () { /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.bash | grep -v '^\s*$' | less -FSRXc ; }
 
 
 #   -------------------------------
@@ -66,10 +58,6 @@ showa () { /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.ba
 #   -------------------------------
 
 zipf () { zip -r "$1".zip "$1" ; }          # zipf:         To create a ZIP archive of a folder
-alias numFiles='echo $(ls -1 | wc -l)'      # numFiles:     Count of non-hidden files in current dir
-alias make1mb='mkfile 1m ./1MB.dat'         # make1mb:      Creates a file of 1mb size (all zeros)
-alias make5mb='mkfile 5m ./5MB.dat'         # make5mb:      Creates a file of 5mb size (all zeros)
-alias make10mb='mkfile 10m ./10MB.dat'      # make10mb:     Creates a file of 10mb size (all zeros)
 
 #   cdf:  'Cd's to frontmost window of MacOS Finder
 #   ------------------------------------------------------
@@ -113,113 +101,104 @@ extract () {
     }
 
 
-    #   ---------------------------
-    #   4.  SEARCHING
-    #   ---------------------------
-    ff () { /usr/bin/find . -name "$@" ; }      # ff:       Find file under the current directory
-    ffs () { /usr/bin/find . -name "$@"'*' ; }  # ffs:      Find file whose name starts with a given string
-    ffe () { /usr/bin/find . -name '*'"$@" ; }  # ffe:      Find file whose name ends with a given string
+#   ---------------------------
+#   4.  SEARCHING
+#   ---------------------------
+ff () { /usr/bin/find . -name "$@" ; }      # ff:       Find file under the current directory
+ffs () { /usr/bin/find . -name "$@"'*' ; }  # ffs:      Find file whose name starts with a given string
+ffe () { /usr/bin/find . -name '*'"$@" ; }  # ffe:      Find file whose name ends with a given string
 
-    #   spotlight: Search for a file using MacOS Spotlight's metadata
-    #   -----------------------------------------------------------
-    spotlight () { mdfind "kMDItemDisplayName == '$@'wc"; }
-
-
-    #   ---------------------------
-    #   5.  PROCESS MANAGEMENT
-    #   ---------------------------
-
-    #   findPid: find out the pid of a specified process
-    #   -----------------------------------------------------
-    #       Note that the command name can be specified via a regex
-    #       E.g. findPid '/d$/' finds pids of all processes with names ending in 'd'
-    #       Without the 'sudo' it will only find processes of the current user
-    #   -----------------------------------------------------
-    findPid () { lsof -t -c "$@" ; }
-
-    #   my_ps: List processes owned by my user:
-    #   ------------------------------------------------------------
-    my_ps() { ps $@ -u $USER -o pid,%cpu,%mem,start,time,bsdtime,command ; }
+#   spotlight: Search for a file using MacOS Spotlight's metadata
+#   -----------------------------------------------------------
+spotlight () { mdfind "kMDItemDisplayName == '$@'wc"; }
 
 
-    #   ---------------------------
-    #   6.  NETWORKING
-    #   ---------------------------
-    #   ii:  display useful host related informaton
-    #   -------------------------------------------------------------------
-    ii() {
-	    echo -e "\nYou are logged on ${RED}$HOST"
-	    echo -e "\nAdditionnal information:$NC " ; uname -a
-	    echo -e "\n${RED}Users logged on:$NC " ; w -h
-	    echo -e "\n${RED}Current date :$NC " ; date
-	    echo -e "\n${RED}Machine stats :$NC " ; uptime
-	    echo -e "\n${RED}Current network location :$NC " ; scselect
-	    echo -e "\n${RED}Public facing IP Address :$NC " ;myip
-	    #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
-	    echo
-    }
+#   ---------------------------
+#   5.  PROCESS MANAGEMENT
+#   ---------------------------
+
+#   findPid: find out the pid of a specified process
+#   -----------------------------------------------------
+#       Note that the command name can be specified via a regex
+#       E.g. findPid '/d$/' finds pids of all processes with names ending in 'd'
+#       Without the 'sudo' it will only find processes of the current user
+#   -----------------------------------------------------
+findPid () { lsof -t -c "$@" ; }
+
+#   my_ps: List processes owned by my user:
+#   ------------------------------------------------------------
+my_ps() { ps $@ -u $USER -o pid,%cpu,%mem,start,time,bsdtime,command ; }
 
 
-    #   ---------------------------------------
-    #   7.  SYSTEMS OPERATIONS & INFORMATION
-    #   ---------------------------------------
+#   ---------------------------
+#   6.  NETWORKING
+#   ---------------------------
+#   ii:  display useful host related informaton
+#   -------------------------------------------------------------------
+ii() {
+    echo -e "\nYou are logged on ${RED}$HOST"
+    echo -e "\nAdditionnal information:$NC " ; uname -a
+    echo -e "\n${RED}Users logged on:$NC " ; w -h
+    echo -e "\n${RED}Current date :$NC " ; date
+    echo -e "\n${RED}Machine stats :$NC " ; uptime
+    echo -e "\n${RED}Current network location :$NC " ; scselect
+    echo -e "\n${RED}Public facing IP Address :$NC " ;myip
+    #echo -e "\n${RED}DNS Configuration:$NC " ; scutil --dns
+    echo
+}
 
 
-    #   ---------------------------------------
-    #   8.  WEB DEVELOPMENT
-    #   ---------------------------------------
-
-    httpHeaders () { /usr/bin/curl -I -L $@ ; }             # httpHeaders:      Grabs headers from web page
-
-    #   httpDebug:  Download a web page and show info on what took time
-    #   -------------------------------------------------------------------
-    httpDebug () { /usr/bin/curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n" ; }
+#   ---------------------------------------
+#   7.  SYSTEMS OPERATIONS & INFORMATION
+#   ---------------------------------------
 
 
-    #   ---------------------------------------
-    #   9.  REMINDERS & NOTES
-    #   ---------------------------------------
+#   ---------------------------------------
+#   8.  WEB DEVELOPMENT
+#   ---------------------------------------
 
-    #   remove_disk: spin down unneeded disk
-    #   ---------------------------------------
-    #   diskutil eject /dev/disk1s3
+httpHeaders () { /usr/bin/curl -I -L $@ ; }             # httpHeaders:      Grabs headers from web page
 
-    #   to change the password on an encrypted disk image:
-    #   ---------------------------------------
-    #   hdiutil chpass /path/to/the/diskimage
+#   httpDebug:  Download a web page and show info on what took time
+#   -------------------------------------------------------------------
+httpDebug () { /usr/bin/curl $@ -o /dev/null -w "dns: %{time_namelookup} connect: %{time_connect} pretransfer: %{time_pretransfer} starttransfer: %{time_starttransfer} total: %{time_total}\n" ; }
 
-    #   to mount a read-only disk image as read-write:
-    #   ---------------------------------------
-    #   hdiutil attach example.dmg -shadow /tmp/example.shadow -noverify
 
-    #   mounting a removable drive (of type msdos or hfs)
-    #   ---------------------------------------
-    #   mkdir /Volumes/Foo
-    #   ls /dev/disk*   to find out the device to use in the mount command)
-    #   mount -t msdos /dev/disk1s1 /Volumes/Foo
-    #   mount -t hfs /dev/disk1s1 /Volumes/Foo
+#   ---------------------------------------
+#   9.  REMINDERS & NOTES
+#   ---------------------------------------
 
-    #   to create a file of a given size: /usr/sbin/mkfile or /usr/bin/hdiutil
-    #   ---------------------------------------
-    #   e.g.: mkfile 10m 10MB.dat
-    #   e.g.: hdiutil create -size 10m 10MB.dmg
-    #   the above create files that are almost all zeros - if random bytes are desired
-    #   then use: ~/Dev/Perl/randBytes 1048576 > 10MB.dat
-    #for file in ~/.{path,bash_prompt,exports,aliases,functions,extra}; do
-    for file in ~/.{bash_prompt,aliases}; do
-	    [ -r "$file" ] && [ -f "$file" ] && source "$file";
-    done;
-    unset file;
+#   remove_disk: spin down unneeded disk
+#   ---------------------------------------
+#   diskutil eject /dev/disk1s3
 
-    #   10. Programming
-    #   ---------------------------------------
-    #source ~/.dockerfunc
-    # PYENV AND VIRTUALENV => multiple python versions
-    if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv virtualenv-init -)"
-    # GIT AUTOCOMPLETE
-    if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  	. $(brew --prefix)/etc/bash_completion
-    fi
+#   to change the password on an encrypted disk image:
+#   ---------------------------------------
+#   hdiutil chpass /path/to/the/diskimage
+
+#   to mount a read-only disk image as read-write:
+#   ---------------------------------------
+#   hdiutil attach example.dmg -shadow /tmp/example.shadow -noverify
+
+#   mounting a removable drive (of type msdos or hfs)
+#   ---------------------------------------
+#   mkdir /Volumes/Foo
+#   ls /dev/disk*   to find out the device to use in the mount command)
+#   mount -t msdos /dev/disk1s1 /Volumes/Foo
+#   mount -t hfs /dev/disk1s1 /Volumes/Foo
+
+#   to create a file of a given size: /usr/sbin/mkfile or /usr/bin/hdiutil
+#   ---------------------------------------
+#   e.g.: mkfile 10m 10MB.dat
+#   e.g.: hdiutil create -size 10m 10MB.dmg
+#   the above create files that are almost all zeros - if random bytes are desired
+#   then use: ~/Dev/Perl/randBytes 1048576 > 10MB.dat
+
+#   10. Programming
+#   ---------------------------------------
+# VIRTUALENV
+eval "$(pyenv virtualenv-init -)"
+# GIT AUTOCOMPLETE
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+. $(brew --prefix)/etc/bash_completion
+fi
