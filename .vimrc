@@ -31,7 +31,8 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'majutsushi/tagbar'
 "fuzzy file finder
 Bundle 'kien/ctrlp.vim.git'
-
+"for git"
+Bundle 'tpope/vim-fugitive'
 filetype plugin indent on     " required!
 "let g:tagbar_ctags_bin = 'ctags --options=/home/javi/.vim/bundle/MatlabFilesEdition/.ctags'
 filetype on
@@ -77,3 +78,6 @@ let g:tagbar_autofocus=1
 let g:tagbar_autoclose=1
 
 set tabstop=4
+autocmd bufread,bufnewfile *.bash_prompt set filetype=sh
+autocmd bufread,bufnewfile *.exports set filetype=sh
+autocmd bufread,bufnewfile *.aliases set filetype=sh
