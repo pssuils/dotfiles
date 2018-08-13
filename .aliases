@@ -45,6 +45,8 @@ alias numFiles='echo $(ls -1 | wc -l)'      # numFiles:     Count of non-hidden 
 alias make1mb='mkfile 1m ./1MB.dat'         # make1mb:      Creates a file of 1mb size (all zeros)
 alias make5mb='mkfile 5m ./5MB.dat'         # make5mb:      Creates a file of 5mb size (all zeros)
 alias make10mb='mkfile 10m ./10MB.dat'      # make10mb:     Creates a file of 10mb size (all zeros)
+alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
+alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 #   ---------------------------
 #   3.  SEARCHING
 #   ---------------------------
@@ -105,17 +107,38 @@ alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"
 alias finderShowHidden='defaults write com.apple.finder ShowAllFiles TRUE'
 alias finderHideHidden='defaults write com.apple.finder ShowAllFiles FALSE'
 
+#   cleanupLS:  Clean up LaunchServices to remove duplicates in the "Open With" menu
+#   -----------------------------------------------------------------------------------
+alias cleanupLS="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
+
+#    screensaverDesktop: Run a screensaver on the Desktop
+#   -----------------------------------------------------------------------------------
+alias screensaverDesktop='/System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine -background'
+
 #   ---------------------------------------
 #   7. PROGRAMMING
 #   ---------------------------------------
 alias editHosts='sudo edit /etc/hosts'                  # editHosts:        Edit /etc/hosts file
 alias gst='git status -sb'				# short status with the branch
 alias cleanpyc='find . -name "*.pyc" -exec rm -rf {} \;'
+alias cleanpycache='find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf'
 #   -----------------------------
 #   8. DOCKER
 #   ---------------------------------------
+#alias dockstart='docker-machine start docker-vm'
+#alias dockenv='docker-machine env docker-vm'
+#alias startpost='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+#alias stoppost='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop'
+#alias stoppost2='pg_ctl -D /usr/local/var/postgres -stop -s -m fast'
+#alias startredis='redis-server --protected-mode no'
 alias dockerhostip='ipconfig getifaddr en0'
+
+#alias dockerimportdb='docker-compose run --rm postgres bash -c "exec psql -U postgres -h postgres"'
 alias dockerrmiall='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+alias dockerrmembed='docker rm $(docker ps -a | grep "embed" | awk "{print $1}")'
+alias dockerrmfactory='docker rm $(docker ps -a | grep "factory" | awk "{print $1}")'
+alias pipunin='pip freeze | xargs pip uninstall -y'
+alias gen_key='pwgen -s -y 64 1'
 #   -----------------------------
 #   9. SSH
 #   ---------------------------------------
