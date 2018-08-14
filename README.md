@@ -28,3 +28,11 @@ Run `profile` from your terminal
 2. `brew install pyenv-virtualenv`
 3. Install some python version `pyenv install 3.5.4`
 
+# Setting up bash-completion
+1. `brew install bash-completion`
+2. On `.bashrc` should be already the following
+```
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+```
